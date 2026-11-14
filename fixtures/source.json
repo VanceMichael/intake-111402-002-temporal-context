@@ -1,0 +1,138 @@
+{
+  "exchanges": [
+    {
+      "path": "/entities",
+      "method": "GET",
+      "body": {
+        "items": [
+          {
+            "id": "gate1",
+            "status": {
+              "value": "open",
+              "datasetId": "manual",
+              "instanceId": "m1"
+            }
+          }
+        ]
+      },
+      "requires": {},
+      "sets": {},
+      "status": 200,
+      "query": {}
+    },
+    {
+      "path": "/temporal/gate1",
+      "method": "GET",
+      "body": {
+        "complete": [
+          [
+            0,
+            20
+          ]
+        ],
+        "attributes": [
+          {
+            "attribute": "status",
+            "datasetId": "manual",
+            "instanceId": "m1",
+            "value": "open",
+            "validFrom": 0,
+            "validTo": 20,
+            "source": "inspector"
+          }
+        ]
+      },
+      "requires": {},
+      "sets": {},
+      "status": 200,
+      "query": {}
+    },
+    {
+      "path": "/changes",
+      "method": "GET",
+      "body": {
+        "next": 1,
+        "items": []
+      },
+      "requires": {},
+      "sets": {},
+      "status": 200,
+      "query": {
+        "after": "0"
+      }
+    }
+  ],
+  "cases": {
+    "overlap": [
+      {
+        "path": "/changes",
+        "method": "GET",
+        "body": {
+          "next": 3,
+          "items": [
+            {
+              "op": "upsert",
+              "entity": "gate1",
+              "attribute": "status",
+              "datasetId": "sensor",
+              "instanceId": "s1",
+              "value": "closed",
+              "validFrom": 10,
+              "source": "sensor"
+            },
+            {
+              "op": "deleteInstance",
+              "entity": "gate1",
+              "attribute": "status",
+              "datasetId": "sensor",
+              "instanceId": "s1",
+              "at": 15
+            }
+          ]
+        },
+        "requires": {},
+        "sets": {},
+        "status": 200,
+        "query": {
+          "after": "0"
+        }
+      },
+      {
+        "path": "/temporal/gate1",
+        "method": "GET",
+        "body": {
+          "complete": [
+            [
+              0,
+              12
+            ]
+          ],
+          "attributes": [
+            {
+              "attribute": "status",
+              "datasetId": "manual",
+              "instanceId": "m1",
+              "value": "open",
+              "validFrom": 0,
+              "validTo": 20,
+              "source": "inspector"
+            },
+            {
+              "attribute": "status",
+              "datasetId": "sensor",
+              "instanceId": "s1",
+              "value": "closed",
+              "validFrom": 10,
+              "validTo": 15,
+              "source": "sensor"
+            }
+          ]
+        },
+        "requires": {},
+        "sets": {},
+        "status": 200,
+        "query": {}
+      }
+    ]
+  }
+}
